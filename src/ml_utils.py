@@ -3,6 +3,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem.snowball import FrenchStemmer
 import string
+import spacy
 
 nltk.download("punkt")
 nltk.download("punkt_tab")
@@ -39,5 +40,7 @@ def nltk_text_preprocessing(x: str) -> str:
     stemmed_tokens = [
         stemmer.stem(token) for token in tokens
     ]
+
+    # French lemmatization
 
     return " ".join(stemmed_tokens)
