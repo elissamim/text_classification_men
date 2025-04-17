@@ -1,3 +1,4 @@
 fireducks
 spacy
 gensim
+ruff
