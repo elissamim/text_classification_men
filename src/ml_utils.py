@@ -1,6 +1,7 @@
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+from nltk.stem.snowball import FrenchStemmer
 import string
 
 nltk.download("punkt")
@@ -33,4 +34,10 @@ def nltk_text_preprocessing(x: str) -> str:
         if token not in stop_words and token not in string.punctuation
     ]
 
-    return " ".join(tokens)
+    # French stemming
+    stemmer = FrenchStemmer()
+    stemmed_tokens = [
+        stemmer.stem(token) for token in tokens
+    ]
+
+    return " ".join(stemmed_tokens)
