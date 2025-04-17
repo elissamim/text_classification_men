@@ -1,1 +1,1 @@
-# text_classification_men
+# Textual classification of internship titles
