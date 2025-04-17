@@ -1,2 +1,3 @@
 fireducks
 spacy
+gensim
