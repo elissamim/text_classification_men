@@ -5,6 +5,8 @@ from nltk.stem.snowball import FrenchStemmer
 import string
 import spacy
 import spacy.cli
+from sklearn.base import BaseEstimator, TransformerMixin
+import numpy as np
 
 nltk.download("punkt")
 nltk.download("punkt_tab")
@@ -58,4 +60,23 @@ def nltk_text_preprocessing(x: str,
         token.lemma_ for token in doc
     ]
     return " ".join(lemmatized_tokens)
+
+class MeanEmbeddingVectorizer(BaseEstimator, TransformerMixin):
+
+    def __init__(self, model):
+        self.model = model
+        self.vector_size = model.vector_size
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        return np.array([
+            np.mean(
+                [self.model.wv[word] for word in doc.split() if word in self.model.wv]
+                or [np.zeros(self.vector_size)],
+                axis=0
+            )
+            for doc in X
+        ])
     
