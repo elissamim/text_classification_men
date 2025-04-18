@@ -2,3 +2,6 @@ fireducks
 spacy
 gensim
 ruff
+transformers
+datasets
+torch
