@@ -5,3 +5,4 @@ ruff
 transformers
 datasets
 torch
+sentencepiece
