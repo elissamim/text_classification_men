@@ -4,3 +4,9 @@ Development of an API to classify internships (internship accepted or not by the
 - Machine Learning : static embedding + classification algorithm
 - Classification with CamemBERT
 - One-Shot-Learning using a generative model
+
+To install the necessary libraries:
+```bash
+pip install uv
+uv pip install -r requirements.txt
+```
