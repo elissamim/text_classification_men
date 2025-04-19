@@ -7,3 +7,5 @@ datasets
 torch
 sentencepiece
 transformers[torch]
+accelerate
+bitsandbytes
