@@ -14,3 +14,7 @@ For the Zero-Shot and Few-Shot learning approches you need to provide a HuggingF
 ```bash
 huggingface-cli login
 ```
+You can verify that the GPU is used with:
+```bash
+nvidia-smi
+```
