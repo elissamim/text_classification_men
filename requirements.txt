@@ -9,3 +9,5 @@ sentencepiece
 transformers[torch]
 accelerate
 bitsandbytes
+fastapi
+uvicorn
