@@ -18,3 +18,7 @@ You can verify that the GPU is used with:
 ```bash
 nvidia-smi
 ```
+To run the API:
+```bash
+uvicorn main:app --reload
+```
