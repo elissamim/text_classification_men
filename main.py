@@ -1,6 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import joblib
+import sys
+
+sys.path.append("src")
+from ml_utils import *
 
 ml_model = joblib.load("models/ml_model.joblib")
 
@@ -18,7 +22,9 @@ def predict(request: TextRequest):
     model_name = request.model_name
 
     if model_name == "ml":
-        return {"prediction":ml_model.predict([text])[0]}
+        
+        clean_text = nltk_text_preprocessing(text)
+        return {"prediction":ml_model.predict([clean_text])[0]}
         
     elif model_name == "camembert":
         pass
