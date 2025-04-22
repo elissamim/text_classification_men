@@ -22,7 +22,16 @@ generator = pipeline(
     tokenizer = tokenizer,
 )
 
-def few_shot_classification(text:str):
+def few_shot_classification(text:str) -> int:
+    """
+    Classify a text given some examples.
+
+    Args:
+        text (str): The text to classify.
+
+    Returns:
+        int: Class of the text.
+    """
 
     prompt = f"""
     Tu es un expert en orientation scolaire. Ta tâche est de déterminer si un intitulé de stage de 3ᵉ est acceptable pour un collégien. Réponds uniquement par "oui" ou "non".
