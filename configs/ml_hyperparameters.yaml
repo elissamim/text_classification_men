@@ -1,0 +1,61 @@
+Bag of Words:
+  feature_extraction__ngram_range:
+    - !!python/tuple [1, 1]
+    - !!python/tuple [1, 2]
+    - !!python/tuple [2, 2]
+  feature_extraction__max_df: [0.7, 0.9, 1]
+  feature_extraction__min_df: [0.001, 0.01, 0.1]
+  feature_extraction__max_features: [10, 100, 1000, 10000]
+  feature_extraction__binary: [true, false]
+
+TF:
+  feature_extraction__max_df: [0.7, 0.8, 0.9, 1]
+  feature_extraction__min_df: [0.001, 0.01, 0.1]
+  feature_extraction__norm: ["l1", "l2", null]
+  feature_extraction__sublinear_tf: [true, false]
+  feature_extraction__max_features: [10, 100, 1000, 10000]
+  feature_extraction__ngram_range:
+    - !!python/tuple [1, 1]
+    - !!python/tuple [1, 2]
+    - !!python/tuple [2, 2]
+
+TF-IDF:
+  feature_extraction__max_df: [0.7, 0.8, 0.9, 1]
+  feature_extraction__min_df: [0.001, 0.01, 0.1]
+  feature_extraction__norm: ["l1", "l2", null]
+  feature_extraction__sublinear_tf: [true, false]
+  feature_extraction__max_features: [10, 100, 1000, 10000]
+  feature_extraction__ngram_range:
+    - !!python/tuple [1, 1]
+    - !!python/tuple [1, 2]
+    - !!python/tuple [2, 2]
+
+Logistic Regression:
+  classifier__C: [0.001, 0.01, 0.1, 1, 10, 100]
+  classifier__penalty: ["l2"]
+  classifier__solver: ["lbfgs"]
+
+Random Forest:
+  classifier__n_estimators: [100, 300, 500]
+  classifier__max_depth: [null, 10, 20, 50]
+  classifier__min_samples_split: [2, 5, 10]
+  classifier__min_samples_leaf: [1, 2, 5, 10]
+  classifier__max_features: ["sqrt", "log2", null]
+  classifier__bootstrap: [true, false]
+
+Linear SVM:
+  classifier__C: [0.001, 0.01, 0.1, 1, 10, 100]
+
+Multinomial Naive Bayes:
+  classifier__alpha: [0.0001, 0.001, 0.01, 0.1, 1, 10]
+  classifier__fit_prior: [true, false]
+
+XGBoost:
+  classifier__n_estimators: [100, 200, 300, 500]
+  classifier__max_depth: [3, 5, 7, 10]
+  classifier__learning_rate: [0.01, 0.05, 0.1, 0.3]
+  classifier__subsample: [0.5, 0.7, 0.8, 1]
+  classifier__colsample_bytree: [0.5, 0.7, 0.8, 1]
+  classifier__gamma: [0, 0.1, 0.5, 1]
+  classifier__reg_alpha: [0, 0.01, 0.1, 1]
+  classifier__reg_lambda: [0.1, 1, 10]
