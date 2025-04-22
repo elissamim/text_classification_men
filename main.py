@@ -5,6 +5,7 @@ import sys
 
 sys.path.append("src")
 from ml_utils import *
+from few_shot_classification import *
 
 ml_model = joblib.load("models/ml_model.joblib")
 
@@ -30,7 +31,7 @@ def predict(request: TextRequest):
         pass
         
     elif model_name == "fewshot":
-        pass
+        return {"prediction":few_shot_classification(text)}
         
     else:
         raise HTTPException(status_code=400,
