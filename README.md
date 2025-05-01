@@ -3,7 +3,7 @@
 Development of an API to classify internships (internship accepted or not by the school) given their titles. 3 approaches:
 - Machine Learning : static embedding + classification algorithm
 - Classification with CamemBERT
-- Few-Shot Learning using a generative model
+- Few-Shot Learning using a generative model (Mistral)
 
 To install the necessary libraries:
 ```bash
