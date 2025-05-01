@@ -12,3 +12,4 @@ bitsandbytes
 fastapi
 uvicorn
 dotenv
+optuna
