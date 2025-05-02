@@ -7,6 +7,10 @@ from transformers import (
 import joblib
 import sys
 import torch
+import os
+import s3fs
+from dotenv import load_dotenv
+import tempfile
 
 sys.path.append("src")
 from ml_utils import *
@@ -16,9 +20,25 @@ from few_shot_classification import *
 ml_model = joblib.load("models/ml_model.joblib")
 
 # Load Camembert Model
-camembert_model = CamembertForSequenceClassification.from_pretrained("models/camembert_model")
-camembert_tokenizer = CamembertTokenizer.from_pretrained("models/camembert_model")
-camembert_model.eval()
+s3_model_path = "elissamim/text_classification_men/models/camembert_model/"
+fs = s3fs.S3FileSystem(
+            client_kwargs={"endpoint_url": "https://minio.lab.sspcloud.fr"},
+            key=os.environ["Accesskey"],
+            secret=os.environ["Secretkey"],
+            token=os.environ["Token"]
+)
+
+with tempfile.TemporaryDirectory() as tmp_dir:
+
+    for file in fs.ls(s3_model_path):
+        file_name = os.path.basename(file)
+        local_path = os.path.join(tmp_dir, file_name)
+        fs.get(file, local_path)
+
+    # Load model and tokenizer from the local temp directory
+    camembert_tokenizer = CamembertTokenizer.from_pretrained(tmp_dir)
+    camembert_model = CamembertForSequenceClassification.from_pretrained(tmp_dir)
+    camembert_model.eval()
 
 app = FastAPI(title="Multi-Model Text Classification API")
 
