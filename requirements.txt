@@ -13,3 +13,5 @@ fastapi
 uvicorn
 dotenv
 optuna
+wordcloud
+pyLDAvis
