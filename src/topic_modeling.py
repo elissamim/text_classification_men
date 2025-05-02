@@ -13,7 +13,7 @@ from sklearn.decomposition import NMF
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import numpy as np
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 nltk.download("punkt")
@@ -141,6 +141,18 @@ class NMFTopicModeling:
     raw_texts: List[str]
     num_topics: int = 3
     num_top_words: int = 10
+    lemmatization: bool = True
+
+    preprocessed_docs: List[str] = field(init=False)
+    vectorizer: TfidfVectorizer = field(init=False)
+    tfidf: any = field(init=False)
+    nmf: NMF = field(init=False)
+    W: np.ndarray = field(init=False)
+    H: np.ndarray = field(init=False)
+    feature_names: List[str] = field(init=False)
+
+    def __post_init__(self):
+        self.nmf_model()
 
     def nmf_preprocessing(self, x: str) -> str:
         """
@@ -190,7 +202,7 @@ class NMFTopicModeling:
         self.W = self.nmf.fit_transform(self.tfidf)
         self.H = self.nmf.components_
 
-        self.features_names = self.vectorizer.get_feature_names_out()
+        self.feature_names = self.vectorizer.get_feature_names_out()
 
     def print_topics(self):
         """
@@ -198,14 +210,14 @@ class NMFTopicModeling:
         """
 
         for topic_idx, topic in enumerate(self.H):
-            print(f"Topic #{topic_idx + 1}:")
+            print(f"Topic {topic_idx}:")
             top_words = [
                 self.feature_names[i]
                 for i in topic.argsort()[: -self.num_top_words - 1 : -1]
             ]
             print(" ".join(top_words), "\n")
 
-    def plot_wordclouds(self):
+    def plot_word_clouds(self):
         """
         Plot a word cloud for each topic.
         """
@@ -219,5 +231,5 @@ class NMFTopicModeling:
             plt.figure()
             plt.imshow(wordcloud, interpolation="bilinear")
             plt.axis("off")
-            plt.title(f"Topic #{topic_idx + 1}")
+            plt.title(f"Topic {topic_idx}")
             plt.show()
