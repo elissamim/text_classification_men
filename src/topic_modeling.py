@@ -74,7 +74,7 @@ class LDATopicModeling:
         Returns:
             gensim.models.ldamodel.LdaModel: Best LDA model in terms of Coherence Value.
         """
-        
+
         # Preprocess documents to get a list of lists of tokens
         preprocessed_docs = [self.lda_preprocessing(doc) for doc in self.raw_texts]
 
@@ -135,10 +135,12 @@ class LDATopicModeling:
             plt.axis("off")
             plt.show()
 
+
 @dataclass
 class NMFTopicModeling:
     raw_texts: List[str]
     num_topics: int = 3
+    num_top_words: int = 10
 
     def nmf_preprocessing(self, x: str) -> str:
         """
@@ -174,14 +176,48 @@ class NMFTopicModeling:
 
     def nmf_model(self):
         """
-
+        Fit the NMF model.
         """
 
         # Preprocess data
-        preprocessed_docs = [self.nmf_preprocessing(doc) for doc in self.raw_texts]
+        self.preprocessed_docs = [self.nmf_preprocessing(doc) for doc in self.raw_texts]
 
-        vectorizer = TfidfVectorizer(max_df=0.95, min_df=2)
-        tfidf = vectorizer.fit_transform(preprocessed_docs)
-        nmf = NMF(n_components=self.num_topics, random_state=42)
-        W =
-        H = 
+        self.vectorizer = TfidfVectorizer(max_df=0.95, min_df=2)
+        self.tfidf = self.vectorizer.fit_transform(self.preprocessed_docs)
+
+        # Get the decomposition
+        self.nmf = NMF(n_components=self.num_topics, random_state=42)
+        self.W = self.nmf.fit_transform(self.tfidf)
+        self.H = self.nmf.components_
+
+        self.features_names = self.vectorizer.get_feature_names_out()
+
+    def print_topics(self):
+        """
+        Print the top words for each topic.
+        """
+
+        for topic_idx, topic in enumerate(self.H):
+            print(f"Topic #{topic_idx + 1}:")
+            top_words = [
+                self.feature_names[i]
+                for i in topic.argsort()[: -self.num_top_words - 1 : -1]
+            ]
+            print(" ".join(top_words), "\n")
+
+    def plot_wordclouds(self):
+        """
+        Plot a word cloud for each topic.
+        """
+        for topic_idx, topic in enumerate(self.H):
+            top_indices = topic.argsort()[: -self.num_top_words - 1 : -1]
+            freqs = {self.feature_names[i]: topic[i] for i in top_indices}
+            wordcloud = WordCloud(
+                background_color="white", width=800, height=400
+            ).generate_from_frequencies(freqs)
+
+            plt.figure()
+            plt.imshow(wordcloud, interpolation="bilinear")
+            plt.axis("off")
+            plt.title(f"Topic #{topic_idx + 1}")
+            plt.show()
