@@ -22,3 +22,4 @@ To run the API:
 ```bash
 uvicorn main:app --reload
 ```
+Further analysis on rejected internship subjects is also given in the [notebooks](notebooks) (topic modeling with LDA and NMF, and clustering with BERTopic).
