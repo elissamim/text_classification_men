@@ -8,6 +8,8 @@ import spacy.cli
 import gensim
 from gensim import corpora
 from gensim.models import CoherenceModel
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.decomposition import NMF
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import numpy as np
@@ -132,3 +134,54 @@ class LDATopicModeling:
             plt.imshow(word_cloud, interpolation="bilinear")
             plt.axis("off")
             plt.show()
+
+@dataclass
+class NMFTopicModeling:
+    raw_texts: List[str]
+    num_topics: int = 3
+
+    def nmf_preprocessing(self, x: str) -> str:
+        """
+        Preprocess textual data using tokenization, pucntuation removal and lowering cases.
+
+        Args:
+            x (str): Text to preprocess.
+
+        Returns:
+            str: Preprocessed string.
+        """
+
+        # Text in lowercase
+        x = x.lower()
+        # Word tokens for French language
+        tokens = word_tokenize(x, language="french")
+        # Stopwords and punctuation removal
+        tokens = [
+            token
+            for token in tokens
+            if token not in stop_words and token not in string.punctuation + "..."
+        ]
+        # French stemming
+        if not self.lemmatization:
+            stemmer = FrenchStemmer()
+            stemmed_tokens = [stemmer.stem(token) for token in tokens]
+            return " ".join(stemmed_tokens)
+
+        # French lemmatization
+        doc = nlp(" ".join(tokens))
+        lemmatized_tokens = [token.lemma_ for token in doc]
+        return " ".join(lemmatized_tokens)
+
+    def nmf_model(self):
+        """
+
+        """
+
+        # Preprocess data
+        preprocessed_docs = [self.nmf_preprocessing(doc) for doc in self.raw_texts]
+
+        vectorizer = TfidfVectorizer(max_df=0.95, min_df=2)
+        tfidf = vectorizer.fit_transform(preprocessed_docs)
+        nmf = NMF(n_components=self.num_topics, random_state=42)
+        W =
+        H = 

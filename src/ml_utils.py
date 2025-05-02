@@ -17,7 +17,6 @@ nlp = spacy.load("fr_core_news_sm")
 
 stop_words = set(stopwords.words("french"))
 
-
 def nltk_text_preprocessing(x: str, lemmatization: bool = False) -> str:
     """
     Preprocess textual data using tokenization, pucntuation removal and lowering cases.
