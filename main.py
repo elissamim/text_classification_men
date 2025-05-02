@@ -16,6 +16,8 @@ sys.path.append("src")
 from ml_utils import *
 from few_shot_classification import *
 
+load_dotenv()
+
 # Load ML model
 ml_model = joblib.load("models/ml_model.joblib")
 
