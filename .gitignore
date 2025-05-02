@@ -1,3 +1,6 @@
+# Ignore the content of the camembert model that has been moved to S3 bucket
+models/camembert_model/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
