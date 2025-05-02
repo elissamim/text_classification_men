@@ -56,7 +56,7 @@ def predict(request: TextRequest):
     if model_name == "ml":
         
         clean_text = nltk_text_preprocessing(text)
-        return {"prediction_ml":ml_model.predict([clean_text])[0]}
+        return {"prediction_ml":int(ml_model.predict([clean_text])[0])}
         
     elif model_name == "camembert":
 
@@ -69,7 +69,7 @@ def predict(request: TextRequest):
         return {"prediction_camembert":int(predicted_label)}
         
     elif model_name == "fewshot":
-        return {"prediction_fewshot":few_shot_classification(text)}
+        return {"prediction_fewshot":int(few_shot_classification(text))}
         
     else:
         raise HTTPException(status_code=400,
