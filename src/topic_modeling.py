@@ -135,36 +135,21 @@ class LDATopicModeling:
             plt.axis("off")
             plt.show()
 
-
 @dataclass
-class NMFTopicModeling:
-    raw_texts: List[str]
-    num_topics: int = 3
-    num_top_words: int = 10
+class DeterministicTopicModeling:
     lemmatization: bool = True
-
-    preprocessed_docs: List[str] = field(init=False)
-    vectorizer: TfidfVectorizer = field(init=False)
-    tfidf: any = field(init=False)
-    nmf: NMF = field(init=False)
-    W: np.ndarray = field(init=False)
-    H: np.ndarray = field(init=False)
-    feature_names: List[str] = field(init=False)
-
-    def __post_init__(self):
-        self.nmf_model()
-
-    def nmf_preprocessing(self, x: str) -> str:
+    
+    def preprocessing(self, x: str) -> str:
         """
         Preprocess textual data using tokenization, pucntuation removal and lowering cases.
-
+    
         Args:
             x (str): Text to preprocess.
-
+    
         Returns:
             str: Preprocessed string.
         """
-
+    
         # Text in lowercase
         x = x.lower()
         # Word tokens for French language
@@ -180,11 +165,28 @@ class NMFTopicModeling:
             stemmer = FrenchStemmer()
             stemmed_tokens = [stemmer.stem(token) for token in tokens]
             return " ".join(stemmed_tokens)
-
+    
         # French lemmatization
         doc = nlp(" ".join(tokens))
         lemmatized_tokens = [token.lemma_ for token in doc]
         return " ".join(lemmatized_tokens)
+    
+@dataclass
+class NMFTopicModeling(DeterministicTopicModeling):
+    raw_texts: List[str]
+    num_topics: int = 3
+    num_top_words: int = 10
+
+    preprocessed_docs: List[str] = field(init=False)
+    vectorizer: TfidfVectorizer = field(init=False)
+    tfidf: any = field(init=False)
+    nmf: NMF = field(init=False)
+    W: np.ndarray = field(init=False)
+    H: np.ndarray = field(init=False)
+    feature_names: List[str] = field(init=False)
+
+    def __post_init__(self):
+        self.nmf_model()
 
     def nmf_model(self):
         """
@@ -192,7 +194,7 @@ class NMFTopicModeling:
         """
 
         # Preprocess data
-        self.preprocessed_docs = [self.nmf_preprocessing(doc) for doc in self.raw_texts]
+        self.preprocessed_docs = [self.preprocessing(doc) for doc in self.raw_texts]
 
         self.vectorizer = TfidfVectorizer(max_df=0.95, min_df=2)
         self.tfidf = self.vectorizer.fit_transform(self.preprocessed_docs)
@@ -233,3 +235,10 @@ class NMFTopicModeling:
             plt.axis("off")
             plt.title(f"Topic {topic_idx}")
             plt.show()
+
+@dataclass
+class LSATopicModeling(DeterministicTopicModeling):
+    pass
+
+    def __post_init__(self):
+        self.lsa_model()
