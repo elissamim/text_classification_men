@@ -240,6 +240,14 @@ class NMFTopicModeling(DeterministicTopicModeling):
 class LSATopicModeling(DeterministicTopicModeling):
     raw_texts: List[str]
     num_topics: int = 3
+    num_top_words: int = 10
+
+    preprocessed_docs: List[str] = field(init=False)
+    vectorizer: TfidfVectorizer = field(init=False)
+    tfidf: any = field(init=False)
+    lsa: TruncatedSVD = field(init=False)
+    lsa_topic_matrix: np.ndarray = field(init=False)
+    feature_names: List[str] = field(init=False)
 
     def __post_init__(self):
         self.lsa_model()
@@ -253,4 +261,34 @@ class LSATopicModeling(DeterministicTopicModeling):
 
         self.vectorizer = TfidfVectorizer(max_df=0.95, min_df=2)
         self.tfidf = self.vectorizer.fit_transform(self.preprocessed_docs)
+
+        self.lsa = TruncatedSVD(n_components = self.num_topics,
+                               random_state = 42)
+        self.lsa_topic_matrix = self.lsa.fit_transform(self.tfidf)
+
+        self.feature_names = self.vectorizer.get_feature_names_out()
+
+    def print_topics(self):
+        """
+        Print the top words for each topic.
+        """
+
+        for i, comp in enumerate(self.lsa.components_):
+            terms_in_topic = [self.feature_names[j] for j in comp.argsort()[:-(self.num_top_words+1):-1]]
+            print(f"Topic {i}: {' '.join(terms_in_topic)}")
+
+    def plot_word_clouds(self):
+        """
+        Plot a word cloud for each topic.
+        """
+        for i, comp in enumerate(self.lsa.components_):
+            top_indices = comp.argsort()[:-(self.num_top_words + 1):-1]
+            freqs = {self.feature_names[j]: comp[j] for j in top_indices}
+            wordcloud = WordCloud(background_color="white", width=800, height=400).generate_from_frequencies(freqs)
+
+            plt.figure()
+            plt.imshow(wordcloud, interpolation="bilinear")
+            plt.axis("off")
+            plt.title(f"Topic {i}")
+            plt.show()
         
