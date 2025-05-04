@@ -137,9 +137,8 @@ class LDATopicModeling:
 
 @dataclass
 class DeterministicTopicModeling:
-    lemmatization: bool = True
     
-    def preprocessing(self, x: str) -> str:
+    def preprocessing(self, x: str, lemmatization: bool = True) -> str:
         """
         Preprocess textual data using tokenization, pucntuation removal and lowering cases.
     
@@ -161,7 +160,7 @@ class DeterministicTopicModeling:
             if token not in stop_words and token not in string.punctuation + "..."
         ]
         # French stemming
-        if not self.lemmatization:
+        if not lemmatization:
             stemmer = FrenchStemmer()
             stemmed_tokens = [stemmer.stem(token) for token in tokens]
             return " ".join(stemmed_tokens)
@@ -176,6 +175,7 @@ class NMFTopicModeling(DeterministicTopicModeling):
     raw_texts: List[str]
     num_topics: int = 3
     num_top_words: int = 10
+    lemmatization:bool = True
 
     preprocessed_docs: List[str] = field(init=False)
     vectorizer: TfidfVectorizer = field(init=False)
@@ -194,7 +194,7 @@ class NMFTopicModeling(DeterministicTopicModeling):
         """
 
         # Preprocess data
-        self.preprocessed_docs = [self.preprocessing(doc) for doc in self.raw_texts]
+        self.preprocessed_docs = [self.preprocessing(doc, self.lemmatization) for doc in self.raw_texts]
 
         self.vectorizer = TfidfVectorizer(max_df=0.95, min_df=2)
         self.tfidf = self.vectorizer.fit_transform(self.preprocessed_docs)
@@ -241,6 +241,7 @@ class LSATopicModeling(DeterministicTopicModeling):
     raw_texts: List[str]
     num_topics: int = 3
     num_top_words: int = 10
+    lemmatization: bool = True
 
     preprocessed_docs: List[str] = field(init=False)
     vectorizer: TfidfVectorizer = field(init=False)
@@ -257,7 +258,7 @@ class LSATopicModeling(DeterministicTopicModeling):
         Fit the LSA model.
         """
 
-        self.preprocessed_docs = [self.preprocessing(doc) for doc in self.raw_texts]
+        self.preprocessed_docs = [self.preprocessing(doc, self.lemmatization) for doc in self.raw_texts]
 
         self.vectorizer = TfidfVectorizer(max_df=0.95, min_df=2)
         self.tfidf = self.vectorizer.fit_transform(self.preprocessed_docs)
