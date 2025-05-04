@@ -9,7 +9,7 @@ import gensim
 from gensim import corpora
 from gensim.models import CoherenceModel
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.decomposition import NMF
+from sklearn.decomposition import NMF, TruncatedSVD
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import numpy as np
@@ -238,7 +238,19 @@ class NMFTopicModeling(DeterministicTopicModeling):
 
 @dataclass
 class LSATopicModeling(DeterministicTopicModeling):
-    pass
+    raw_texts: List[str]
+    num_topics: int = 3
 
     def __post_init__(self):
         self.lsa_model()
+
+    def lsa_model(self):
+        """
+        Fit the LSA model.
+        """
+
+        self.preprocessed_docs = [self.preprocessing(doc) for doc in self.raw_texts]
+
+        self.vectorizer = TfidfVectorizer(max_df=0.95, min_df=2)
+        self.tfidf = self.vectorizer.fit_transform(self.preprocessed_docs)
+        
