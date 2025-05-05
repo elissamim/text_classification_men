@@ -8,9 +8,11 @@ from umap import UMAP
 import hdbscan
 import nltk
 from nltk.corpus import stopwords
+import plotly.io as pio
 
 nltk.download("stopwords")
 stop_words = list(set(stopwords.words("french")))
+pio.renderers.default = "notebook_connected"
 
 @dataclass
 class BERTopicClustering:
@@ -118,4 +120,23 @@ class BERTopicClustering:
 
         preprocessed_texts = [self.light_preprocessing(text) for text in self.raw_texts]
         
-        return self.bertopic.fit_transform(preprocessed_texts)
+        self.topics, self.probs = self.bertopic.fit_transform(preprocessed_texts)
+        return self.topics, self.probs
+
+    def visualize_topics(self):
+        return self.bertopic.visualize_topics()
+
+    def visualize_barchart(self, top_n=10):
+        return self.bertopic.visualize_barchart(top_n_topics=top_n)
+
+    def visualize_hierarchy(self):
+        return self.bertopic.visualize_hierarchy()
+
+    def visualize_heatmap(self):
+        return self.bertopic.visualize_heatmap()
+
+    def get_topic_info(self):
+        return self.bertopic.get_topic_info()
+
+    def get_topic(self, topic_id):
+        return self.bertopic.get_topic(topic_id)
